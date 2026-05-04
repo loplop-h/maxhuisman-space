@@ -87,25 +87,36 @@ function initScenes() {
 
     // ── Master ScrollTrigger drives scene swaps ────────────────────────
     let currentIdx = 0;
-    let typeQueue = null;
 
     ScrollTrigger.create({
         trigger: document.body,
         start: 'top top',
         end: 'bottom bottom',
+        invalidateOnRefresh: true,
         onUpdate: (self) => {
             const progress = self.progress;
             updateScrollUI(progress);
 
-            // Determine active scene index
-            // Each scene gets equal share; small bias so last scene is reachable
-            const idx = Math.min(total - 1, Math.floor(progress * total));
-
+            // Determine active scene index with hysteresis (small dead-zone
+            // around boundaries so wiggling doesn't trigger swap thrash)
+            const raw = progress * total;
+            let idx = Math.min(total - 1, Math.floor(raw));
+            const frac = raw - idx;
+            // If we're within 5% of a boundary on the leaving side, stick
             if (idx !== currentIdx) {
+                if (idx === currentIdx + 1 && frac < 0.05) return;
+                if (idx === currentIdx - 1 && frac > 0.95) return;
                 swapScene(currentIdx, idx, sceneEls);
                 currentIdx = idx;
             }
         },
+    });
+
+    // Re-measure on resize / orientation change so scene boundaries stay correct
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 200);
     });
 
     // First scene's counters animate on load
@@ -127,24 +138,45 @@ function initScenes() {
 }
 
 function swapScene(fromIdx, toIdx, els) {
+    if (fromIdx === toIdx) return;
+
     const from = els[fromIdx];
     const to = els[toIdx];
+    const goingForward = toIdx > fromIdx;
 
-    from.classList.remove('is-active');
+    // Mark active state immediately (single source of truth)
+    els.forEach(el => el.classList.remove('is-active'));
     to.classList.add('is-active');
 
-    // Outgoing
+    // Force ALL non-participating scenes to a clean hidden state.
+    // This handles fast-scroll skips: scenes the user blew past
+    // would otherwise be left in a half-faded state.
+    els.forEach((el, i) => {
+        if (i !== fromIdx && i !== toIdx) {
+            gsap.killTweensOf(el);
+            gsap.set(el, { opacity: 0, y: 20 });
+        }
+    });
+
+    // Outgoing — overwrite kills any in-progress tween on this element
     gsap.to(from, {
         opacity: 0,
-        y: toIdx > fromIdx ? -30 : 30,
-        duration: 0.5,
+        y: goingForward ? -24 : 24,
+        duration: 0.4,
         ease: 'power2.in',
+        overwrite: 'auto',
     });
 
     // Incoming
     gsap.fromTo(to,
-        { opacity: 0, y: toIdx > fromIdx ? 30 : -30 },
-        { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' }
+        { opacity: 0, y: goingForward ? 24 : -24 },
+        {
+            opacity: 1,
+            y: 0,
+            duration: 0.55,
+            ease: 'power3.out',
+            overwrite: 'auto',
+        }
     );
 
     // Type new prompt + update meta
