@@ -179,13 +179,25 @@ function init3D() {
     });
 
     // ── Animation switcher ─────────────────────────────────────────────
+    // Debounced: if the user is blasting through sections, only the
+    // animation we land on actually plays. Cross-fading 5 actions in one
+    // second forces the mixer to blend bone weights across all of them
+    // simultaneously — expensive and visually muddy.
+    let switchTimer = null;
+    let pendingAnim = null;
     function playAnim(name) {
         const action = actions[name];
-        if (!action) return;
-        if (action === currentAction) return;
-        if (currentAction) currentAction.fadeOut(0.4);
-        action.reset().fadeIn(0.4).play();
-        currentAction = action;
+        if (!action || action === currentAction) return;
+        pendingAnim = name;
+        if (switchTimer) return;
+        switchTimer = setTimeout(() => {
+            switchTimer = null;
+            const target = actions[pendingAnim];
+            if (!target || target === currentAction) return;
+            if (currentAction) currentAction.fadeOut(0.35);
+            target.reset().fadeIn(0.35).play();
+            currentAction = target;
+        }, 120);
     }
 
     // ── Scroll-driven robot motion ─────────────────────────────────────
@@ -210,7 +222,7 @@ function init3D() {
                 trigger: document.querySelector('main'),
                 start: 'top top',
                 end: 'bottom bottom',
-                scrub: 0.4,                  // less smoothing = less lag
+                scrub: 0.25,                 // less smoothing = less perceived lag
                 invalidateOnRefresh: true,
             },
         });
