@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="bg" cx="20%" cy="0%" r="80%">
+      <stop offset="0%" stop-color="#14253E"/>
+      <stop offset="100%" stop-color="#0A1220"/>
+    </radialGradient>
+    <radialGradient id="coralGlow" cx="80%" cy="100%" r="50%">
+      <stop offset="0%" stop-color="rgba(229, 89, 52, 0.18)"/>
+      <stop offset="100%" stop-color="rgba(229, 89, 52, 0)"/>
+    </radialGradient>
+    <linearGradient id="stratumText" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5F7FA"/>
+      <stop offset="50%" stop-color="#76C8FF"/>
+      <stop offset="100%" stop-color="#F5F7FA"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#coralGlow)"/>
+
+  <!-- top chrome bar -->
+  <rect x="0" y="0" width="1200" height="42" fill="#0F1C30" opacity="0.7"/>
+  <line x1="0" y1="42" x2="1200" y2="42" stroke="#76C8FF" stroke-width="0.5" opacity="0.15"/>
+  <circle cx="28" cy="21" r="6" fill="#FF5F56"/>
+  <circle cx="48" cy="21" r="6" fill="#FFBD2E"/>
+  <circle cx="68" cy="21" r="6" fill="#27C93F"/>
+  <text x="600" y="26" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="rgba(245,247,250,0.45)">
+    <tspan fill="#76C8FF">loplop@huisman</tspan><tspan fill="rgba(245,247,250,0.45)">:</tspan><tspan fill="#E55934">~/identity</tspan><tspan fill="rgba(245,247,250,0.25)"> — session.log</tspan>
+  </text>
+
+  <!-- prompt line -->
+  <text x="60" y="76" font-family="JetBrains Mono, monospace" font-size="14" fill="#F5F7FA">
+    <tspan fill="#E55934" font-weight="700">$</tspan> whoami<tspan fill="#F5F7FA">▊</tspan>
+  </text>
+  <line x1="0" y1="92" x2="1200" y2="92" stroke="#76C8FF" stroke-width="0.5" opacity="0.10" stroke-dasharray="2 4"/>
+
+  <!-- session tag -->
+  <circle cx="80" cy="158" r="4" fill="#76C8FF" opacity="0.9"/>
+  <text x="92" y="163" font-family="JetBrains Mono, monospace" font-size="11" fill="rgba(245,247,250,0.45)" letter-spacing="2">
+    SESSION/0001 — IDENTITY
+  </text>
+
+  <!-- loplop bird -->
+  <g transform="translate(1050, 130) scale(1.4)">
+    <ellipse cx="50" cy="55" rx="22" ry="14" fill="#1F4E79" opacity="0.85"/>
+    <ellipse cx="38" cy="50" rx="18" ry="11" fill="#1F4E79" opacity="0.95"/>
+    <ellipse cx="34" cy="46" rx="9" ry="8" fill="#0F1C30"/>
+    <circle cx="32" cy="44" r="2" fill="#F5F7FA"/>
+    <circle cx="32" cy="44" r="1" fill="#0A1220"/>
+    <polygon points="24,46 16,48 24,50" fill="#E55934"/>
+    <line x1="48" y1="68" x2="46" y2="76" stroke="#E55934" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="54" y1="68" x2="56" y2="76" stroke="#E55934" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- name -->
+  <text x="600" y="280" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="100" font-weight="500" fill="#F5F7FA" letter-spacing="-2">
+    Max Ernst
+  </text>
+  <text x="600" y="376" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="76" font-weight="300" font-style="italic" fill="#F5F7FA" letter-spacing="-1.5">
+    Huisman <tspan fill="#E55934">Gutiérrez</tspan>
+  </text>
+
+  <!-- subtitle strip -->
+  <text x="600" y="436" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="15" fill="#F5F7FA">
+    <tspan fill="rgba(245,247,250,0.45)">ROLE</tspan> AI/ML engineer
+    <tspan fill="rgba(245,247,250,0.45)">·</tspan>
+    <tspan fill="rgba(245,247,250,0.45)">CITY</tspan> Barcelona
+    <tspan fill="rgba(245,247,250,0.45)">·</tspan>
+    <tspan fill="rgba(245,247,250,0.45)">STATUS</tspan> available now
+  </text>
+
+  <!-- stats row -->
+  <g transform="translate(168, 470)">
+    <rect width="864" height="100" rx="10" fill="#0F1C30" opacity="0.6" stroke="rgba(118,200,255,0.15)" stroke-width="1"/>
+
+    <text x="108" y="50" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="42" font-weight="700" fill="#E55934">4</text>
+    <text x="108" y="78" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="rgba(245,247,250,0.45)" letter-spacing="0.5">PyPI packages</text>
+    <line x1="216" y1="20" x2="216" y2="80" stroke="rgba(118,200,255,0.10)"/>
+
+    <text x="324" y="50" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="42" font-weight="700" fill="#E55934">350+</text>
+    <text x="324" y="78" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="rgba(245,247,250,0.45)" letter-spacing="0.5">tests shipped</text>
+    <line x1="432" y1="20" x2="432" y2="80" stroke="rgba(118,200,255,0.10)"/>
+
+    <text x="540" y="50" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="42" font-weight="700" fill="#E55934">88%</text>
+    <text x="540" y="78" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="rgba(245,247,250,0.45)" letter-spacing="0.5">branch coverage</text>
+    <line x1="648" y1="20" x2="648" y2="80" stroke="rgba(118,200,255,0.10)"/>
+
+    <text x="756" y="50" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="42" font-weight="700" fill="#E55934">25K+</text>
+    <text x="756" y="78" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="rgba(245,247,250,0.45)" letter-spacing="0.5">launch impressions</text>
+  </g>
+
+  <!-- bottom domain -->
+  <text x="600" y="610" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" fill="#76C8FF" letter-spacing="1">
+    maxhuisman.space
+  </text>
+</svg>

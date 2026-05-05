@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>404 · maxhuisman.space</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Fraunces:opsz,wght@9..144,300;9..144,500&display=swap">
+  <style>
+    :root {
+      --bg: #0A1220;
+      --bg-2: #0F1C30;
+      --slate-faint: #76C8FF;
+      --coral: #E55934;
+      --cream: #F5F7FA;
+      --green-light: #95F2A8;
+      --dim: rgba(245, 247, 250, 0.45);
+      --line: rgba(118, 200, 255, 0.10);
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'Inter', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(229, 89, 52, 0.06), transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(118, 200, 255, 0.05), transparent 60%),
+        var(--bg);
+      color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--slate-faint); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--coral); }
+    .frame-top, .frame-bot {
+      padding: 14px clamp(20px, 4vw, 60px);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--dim);
+      background: rgba(15, 28, 48, 0.7);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .frame-top { border-bottom: 1px solid var(--line); }
+    .frame-bot { border-top: 1px solid var(--line); margin-top: auto; justify-content: space-between; font-size: 11px; }
+    .dots { display: flex; gap: 7px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #FF5F56; } .dot-y { background: #FFBD2E; } .dot-g { background: #27C93F; }
+    .frame-title { flex: 1; text-align: center; }
+    .t-host { color: var(--slate-faint); }
+    .t-path { color: var(--coral); }
+    .t-tail { color: rgba(245,247,250,0.25); }
+    .prompt {
+      padding: 16px clamp(20px, 4vw, 60px);
+      font-family: var(--mono);
+      font-size: 14px;
+      border-bottom: 1px dashed var(--line);
+      background: rgba(10, 18, 32, 0.4);
+    }
+    .prompt-sigil { color: var(--coral); font-weight: 700; font-size: 16px; margin-right: 10px; }
+    .cursor {
+      display: inline-block;
+      animation: blink 1.05s steps(2) infinite;
+    }
+    @keyframes blink { to { opacity: 0; } }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      padding: 60px clamp(20px, 4vw, 60px);
+      text-align: center;
+    }
+    .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--dim);
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tag-dot {
+      width: 7px; height: 7px;
+      background: var(--coral);
+      box-shadow: 0 0 10px var(--coral);
+      border-radius: 50%;
+      animation: blink 2s ease-in-out infinite;
+    }
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(80px, 16vw, 220px);
+      font-weight: 700;
+      color: transparent;
+      background: linear-gradient(135deg, var(--cream) 0%, var(--slate-faint) 50%, var(--cream) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .subtitle {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(20px, 2.5vw, 28px);
+      color: var(--cream);
+      max-width: 560px;
+    }
+    .subtitle .accent { color: var(--coral); }
+    .traceback {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--dim);
+      background: rgba(10, 18, 32, 0.7);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px 22px;
+      max-width: 560px;
+      text-align: left;
+      line-height: 1.7;
+      margin-top: 8px;
+    }
+    .traceback .err { color: var(--coral); }
+    .actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    .btn {
+      padding: 10px 22px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      background: rgba(15, 28, 48, 0.5);
+      color: var(--cream);
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+    .btn:hover {
+      border-color: var(--coral);
+      background: rgba(15, 28, 48, 0.85);
+      color: var(--cream);
+      transform: translateY(-2px);
+    }
+    .btn-primary {
+      border-color: rgba(229, 89, 52, 0.4);
+      background: rgba(229, 89, 52, 0.12);
+      color: var(--coral);
+    }
+    .btn-primary:hover { background: rgba(229, 89, 52, 0.2); }
+  </style>
+</head>
+<body>
+
+  <header class="frame-top">
+    <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+    <div class="frame-title">
+      <span class="t-host">loplop@huisman</span>:<span class="t-path">~/404</span><span class="t-tail"> — session.log</span>
+    </div>
+  </header>
+
+  <div class="prompt">
+    <span class="prompt-sigil">$</span>cat <span style="color: var(--coral);">/dev/null</span><span class="cursor">▊</span>
+  </div>
+
+  <main>
+    <span class="tag"><span class="tag-dot"></span> session/error — page_not_found</span>
+
+    <h1>404</h1>
+
+    <p class="subtitle">
+      that path doesn't exist in this <span class="accent">session.log</span>.
+    </p>
+
+    <pre class="traceback">Traceback (most recent call last):
+  File "<span class="err">router.py</span>", line 42, in resolve
+    page = await fetch(path)
+<span class="err">PathNotFoundError</span>: no such page.
+# scrub back to a known-good state.</pre>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="/">cd /home</a>
+      <a class="btn" href="https://github.com/loplop-h" target="_blank" rel="noopener">github.com/loplop-h</a>
+      <a class="btn" href="mailto:maxernstprojects@gmail.com">contact</a>
+    </div>
+  </main>
+
+  <footer class="frame-bot">
+    <span><span class="prompt-sigil">$</span>session.tail</span>
+    <span style="color: var(--coral);">404 · path not found</span>
+  </footer>
+
+</body>
+</html>
