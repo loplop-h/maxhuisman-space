@@ -386,8 +386,7 @@ main {
 }
 .stat {
     padding: clamp(20px, 3vw, 32px);
-    background: rgba(15, 28, 48, 0.5);
-    backdrop-filter: blur(6px);
+    background: rgba(15, 28, 48, 0.85);
     text-align: left;
 }
 .stat-num {
@@ -425,8 +424,7 @@ main {
     padding: 28px;
     border: 1px solid var(--line);
     border-radius: 14px;
-    background: rgba(15, 28, 48, 0.5);
-    backdrop-filter: blur(6px);
+    background: rgba(15, 28, 48, 0.85);
     color: var(--cream);
     transition: all 0.3s;
     position: relative;

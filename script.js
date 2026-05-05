@@ -58,28 +58,23 @@ function init3D() {
     const renderer = new THREE.WebGLRenderer({
         canvas: CANVAS,
         alpha: true,
-        antialias: !IS_MOBILE,
+        antialias: false,           // FXAA-quality not needed; pixel ratio compensates
         powerPreference: 'high-performance',
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, IS_MOBILE ? 1.5 : 2));
+    // Cap pixel ratio aggressively — high-DPI displays amortize otherwise.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, IS_MOBILE ? 1.0 : 1.25));
     renderer.setSize(window.innerWidth, window.innerHeight, false);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-    // Lighting — moody but readable on slate background
-    const hemi = new THREE.HemisphereLight(0x76C8FF, 0x0A1220, 0.6);
+    // Lighting — minimal. Two lights is enough; extra point lights were
+    // pretty but doubled per-fragment shading cost on every mesh in the
+    // robot.
+    const hemi = new THREE.HemisphereLight(0x9DC8FF, 0x14253E, 0.85);
     scene.add(hemi);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.1);
     keyLight.position.set(3, 5, 4);
     scene.add(keyLight);
-
-    const coralAccent = new THREE.PointLight(0xE55934, 0.6, 12);
-    coralAccent.position.set(-3, 2, 3);
-    scene.add(coralAccent);
-
-    const slateAccent = new THREE.PointLight(0x76C8FF, 0.4, 12);
-    slateAccent.position.set(3, -2, 2);
-    scene.add(slateAccent);
 
     // Nested groups: pivot is driven by scroll (GSAP), bobGroup is driven
     // by the render loop (time-based). Splitting them avoids the two
@@ -159,6 +154,17 @@ function init3D() {
     }
     renderer.setAnimationLoop(tick);
 
+    // Pause rendering when the tab is hidden — saves CPU/GPU + battery
+    // while the user is on another tab. Resume on focus.
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            renderer.setAnimationLoop(null);
+        } else {
+            clock.getDelta(); // discard accumulated delta
+            renderer.setAnimationLoop(tick);
+        }
+    });
+
     // ── Resize ─────────────────────────────────────────────────────────
     let resizeT = null;
     window.addEventListener('resize', () => {
@@ -204,7 +210,7 @@ function init3D() {
                 trigger: document.querySelector('main'),
                 start: 'top top',
                 end: 'bottom bottom',
-                scrub: 0.8,
+                scrub: 0.4,                  // less smoothing = less lag
                 invalidateOnRefresh: true,
             },
         });
