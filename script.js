@@ -11,6 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const IS_MOBILE = window.matchMedia('(max-width: 900px)').matches;
+const IS_PORTRAIT = window.matchMedia('(orientation: portrait) and (max-width: 768px)').matches;
 
 const ROBOT_URL = 'https://threejs.org/examples/models/gltf/RobotExpressive/RobotExpressive.glb';
 
@@ -18,7 +19,9 @@ const ROBOT_URL = 'https://threejs.org/examples/models/gltf/RobotExpressive/Robo
 // World coords: camera at (0, 1, 5), FOV 50, looking at (0, 0.6, 0).
 // Visible width at z=0 ≈ 4.66 units. Robot is ~2 units tall, pivot at feet.
 // Each anchor: { x, y, z, ry, anim, fov? }
-const ANCHORS = {
+// Desktop / landscape anchors. Robot lives in the side gutters where
+// content has empty space.
+const ANCHORS_DESKTOP = {
     hero:     { x:  2.0, y: -1.0, z:  0.2, ry: -0.5, anim: 'Wave',     scale: 0.55 },
     about:    { x: -2.5, y: -1.7, z: -0.3, ry:  0.5, anim: 'Idle',     scale: 0.35 },
     toolkit:  { x:  2.6, y: -1.7, z: -0.3, ry: -0.5, anim: 'ThumbsUp', scale: 0.35 },
@@ -29,6 +32,24 @@ const ANCHORS = {
     process:  { x: -2.5, y: -1.5, z: -0.1, ry:  0.5, anim: 'Standing', scale: 0.4 },
     contact:  { x:  2.5, y: -1.3, z:  0.3, ry: -0.4, anim: 'Jump',     scale: 0.55 },
 };
+
+// Portrait phone anchors. Visible horizontal width at z=0 with FOV 50
+// and aspect ~0.46 is only ~2.1 units, so x must stay roughly within
+// [-1, 1]. Robot also pushed deeper into the bottom corner so it's an
+// ambient companion peeking up rather than a body in front of text.
+const ANCHORS_PORTRAIT = {
+    hero:     { x:  0.4, y: -1.9, z:  0.0, ry: -0.4, anim: 'Wave',     scale: 0.32 },
+    about:    { x: -0.6, y: -2.2, z: -0.5, ry:  0.4, anim: 'Idle',     scale: 0.26 },
+    toolkit:  { x:  0.7, y: -2.2, z: -0.5, ry: -0.4, anim: 'ThumbsUp', scale: 0.26 },
+    rewind:   { x: -0.7, y: -2.1, z: -0.4, ry:  0.4, anim: 'Walking',  scale: 0.26 },
+    stratum:  { x:  0.7, y: -2.1, z: -0.4, ry: -0.4, anim: 'Running',  scale: 0.26 },
+    others:   { x: -0.7, y: -2.2, z: -0.5, ry:  0.4, anim: 'Yes',      scale: 0.26 },
+    timeline: { x:  0.7, y: -2.1, z: -0.4, ry: -0.4, anim: 'Walking',  scale: 0.26 },
+    process:  { x: -0.5, y: -2.0, z: -0.3, ry:  0.4, anim: 'Standing', scale: 0.30 },
+    contact:  { x:  0.5, y: -1.7, z:  0.2, ry: -0.4, anim: 'Jump',     scale: 0.36 },
+};
+
+const ANCHORS = IS_PORTRAIT ? ANCHORS_PORTRAIT : ANCHORS_DESKTOP;
 
 const CANVAS = document.getElementById('stage-canvas');
 const BOOT = document.getElementById('boot');

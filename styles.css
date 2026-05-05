@@ -44,6 +44,8 @@ body {
     font-family: var(--sans);
     line-height: 1.55;
     overflow-x: hidden;
+    /* iOS Safari: prevent rubber-band bounce that messes with ScrollTrigger */
+    overscroll-behavior-y: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -221,7 +223,14 @@ main {
     display: flex;
     align-items: center;
 }
-.section-hero { min-height: calc(100vh - var(--topbar-h)); padding-top: clamp(40px, 8vh, 100px); }
+.section-hero {
+    min-height: calc(100vh - var(--topbar-h));
+    /* iOS Safari toolbar: svh = "small viewport height" with toolbar
+       visible. Prevents the layout-shift jank when bar collapses on
+       scroll. Falls back to vh on browsers without svh support. */
+    min-height: calc(100svh - var(--topbar-h));
+    padding-top: clamp(40px, 8vh, 100px);
+}
 
 .container {
     width: 100%;
@@ -328,11 +337,17 @@ main {
     transition: all 0.2s;
     letter-spacing: 0.04em;
 }
-.btn:hover {
-    border-color: var(--coral);
-    background: rgba(229, 89, 52, 0.08);
-    color: var(--coral);
-    transform: translateY(-2px);
+@media (hover: hover) {
+    .btn:hover {
+        border-color: var(--coral);
+        background: rgba(229, 89, 52, 0.08);
+        color: var(--coral);
+        transform: translateY(-2px);
+    }
+}
+.btn:active {
+    transform: translateY(0);
+    background: rgba(229, 89, 52, 0.15);
 }
 .btn-primary {
     background: var(--coral);
@@ -438,12 +453,15 @@ main {
     opacity: 0;
     transition: opacity 0.3s;
 }
-.tool-card:hover {
-    border-color: rgba(229, 89, 52, 0.4);
-    transform: translateY(-3px);
-    color: var(--cream);
+@media (hover: hover) {
+    .tool-card:hover {
+        border-color: rgba(229, 89, 52, 0.4);
+        transform: translateY(-3px);
+        color: var(--cream);
+    }
+    .tool-card:hover::before { opacity: 1; }
 }
-.tool-card:hover::before { opacity: 1; }
+.tool-card:active { background: rgba(15, 28, 48, 0.95); }
 .tool-verb {
     font-family: var(--mono);
     font-size: 10.5px;
@@ -714,10 +732,12 @@ main {
     color: var(--cream);
     transition: all 0.3s;
 }
-.other-card:hover {
-    border-color: rgba(229, 89, 52, 0.4);
-    transform: translateY(-4px);
-    color: var(--cream);
+@media (hover: hover) {
+    .other-card:hover {
+        border-color: rgba(229, 89, 52, 0.4);
+        transform: translateY(-4px);
+        color: var(--cream);
+    }
 }
 .oc-head {
     display: flex;
@@ -942,11 +962,14 @@ main {
     color: var(--cream);
     transition: all 0.2s;
 }
-.ci:hover {
-    border-color: rgba(229, 89, 52, 0.4);
-    background: rgba(15, 28, 48, 0.75);
-    transform: translateY(-2px);
+@media (hover: hover) {
+    .ci:hover {
+        border-color: rgba(229, 89, 52, 0.4);
+        background: rgba(15, 28, 48, 0.75);
+        transform: translateY(-2px);
+    }
 }
+.ci:active { background: rgba(15, 28, 48, 0.85); }
 .ci-key {
     font-family: var(--mono);
     font-size: 11px;
