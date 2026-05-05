@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Max Ernst Huisman Gutiérrez — AI/ML engineer · Barcelona</title>
-  <meta name="description" content="loplop://session — a one-page portfolio you scroll through like a terminal scrubbing through a career.">
+  <meta name="description" content="One-page portfolio for Max Ernst Huisman Gutiérrez — AI/ML engineer, 4 PyPI packages on agentic AI tooling, 3rd-year OTIC at La Salle Barcelona.">
   <meta name="author" content="Max Ernst Huisman Gutiérrez">
 
-  <meta property="og:title" content="Max Ernst Huisman Gutiérrez — building developer tools for AI agents">
+  <meta property="og:title" content="Max Ernst Huisman Gutiérrez — AI/ML engineer · Barcelona">
   <meta property="og:description" content="3rd-year engineering student at La Salle Barcelona. 4 PyPI packages. Available now.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://maxhuisman.space">
@@ -18,7 +18,7 @@
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Max Ernst Huisman Gutiérrez — AI/ML engineer · Barcelona">
-  <meta name="twitter:description" content="loplop://session — a one-page portfolio you scroll through like a terminal. 4 PyPI packages. Available now.">
+  <meta name="twitter:description" content="4 PyPI packages on agentic AI tooling. Available now.">
   <meta name="twitter:image" content="https://maxhuisman.space/og-image.svg">
 
   <meta name="theme-color" content="#0A1220">
@@ -31,340 +31,281 @@
 </head>
 <body>
 
-  <!-- ═══════════════════════════════════════════════════════════════════
-       SPACER — sets the page's scroll length (8 scenes × 100vh)
-       ═══════════════════════════════════════════════════════════════════ -->
-  <div class="spacer" id="spacer" aria-hidden="true"></div>
+  <!-- Three.js canvas — fixed full viewport, behind all content -->
+  <canvas id="stage-canvas" aria-hidden="true"></canvas>
 
-  <!-- ═══════════════════════════════════════════════════════════════════
-       FRAME — fixed terminal-window UI, always in view
-       ═══════════════════════════════════════════════════════════════════ -->
-  <div class="frame">
+  <!-- Loading splash, removed once 3D scene is ready -->
+  <div id="boot" aria-hidden="true">
+    <div class="boot-text">loading session…</div>
+    <div class="boot-bar"><span></span></div>
+  </div>
 
-    <!-- Top chrome -->
-    <header class="frame-top">
-      <div class="dots">
-        <span class="dot dot-r"></span>
-        <span class="dot dot-y"></span>
-        <span class="dot dot-g"></span>
-      </div>
-      <div class="frame-title">
-        <span class="t-host">loplop@huisman</span><span class="t-sep">:</span><span class="t-path" id="framePath">~/career</span>
-        <span class="t-tail"> — session.log</span>
-      </div>
-      <div class="frame-clock" id="clock">--:--:--</div>
-    </header>
-
-    <!-- Live prompt line: command morphs as you scroll between scenes -->
-    <div class="prompt-line" aria-hidden="true">
-      <span class="prompt-sigil">$</span>
-      <span class="prompt-cmd" id="promptCmd"></span>
-      <span class="prompt-cursor">▊</span>
+  <!-- Top bar (lightweight, no fixed terminal frame) -->
+  <header class="topbar">
+    <a class="brand" href="#hero">
+      <span class="brand-mark">●</span>
+      <span class="brand-name">loplop<span class="dim">@huisman</span></span>
+    </a>
+    <nav class="nav">
+      <a href="#about">about</a>
+      <a href="#toolkit">toolkit</a>
+      <a href="#rewind">rewind</a>
+      <a href="#timeline">timeline</a>
+      <a href="#contact">contact</a>
+    </nav>
+    <div class="topbar-status">
+      <span class="status-dot"></span>
+      <span class="dim">available now</span>
     </div>
+  </header>
 
-    <!-- The stage: every scene lives here, layered in absolute position -->
-    <main class="stage">
+  <!-- Subtle scroll progress at top edge -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
-      <!-- CRT effects (purely decorative) -->
-      <div class="fx-scanlines" aria-hidden="true"></div>
-      <div class="fx-vignette" aria-hidden="true"></div>
-      <div class="fx-grain" aria-hidden="true"></div>
-      <div class="fx-glow" aria-hidden="true"></div>
+  <main>
 
-      <!-- Loplop bird, drifts across all scenes -->
-      <svg class="loplop-bird" viewBox="0 0 100 100" id="loplopBird" aria-hidden="true">
-        <defs>
-          <radialGradient id="lopWing" cx="0.3" cy="0.3">
-            <stop offset="0%" stop-color="#76C8FF"/>
-            <stop offset="100%" stop-color="#1F4E79"/>
-          </radialGradient>
-        </defs>
-        <ellipse cx="50" cy="55" rx="22" ry="14" fill="url(#lopWing)" opacity="0.85"/>
-        <ellipse cx="38" cy="50" rx="18" ry="11" fill="#1F4E79" opacity="0.95"/>
-        <ellipse cx="34" cy="46" rx="9" ry="8" fill="#0F1C30"/>
-        <circle cx="32" cy="44" r="2" fill="#F5F7FA"/>
-        <circle cx="32" cy="44" r="1" fill="#0A1220"/>
-        <polygon points="24,46 16,48 24,50" fill="#E55934"/>
-        <line x1="48" y1="68" x2="46" y2="76" stroke="#E55934" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="54" y1="68" x2="56" y2="76" stroke="#E55934" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-
-      <!-- ═══════════════════════════════════════════════════════════════
-           SCENE 1 — WHOAMI
-           ═══════════════════════════════════════════════════════════════ -->
-      <section class="scene scene-whoami" data-scene="whoami">
-        <div class="scene-tag"><span class="tag-dot"></span> session/0001 — identity</div>
-
-        <h1 class="whoami-name">
-          <span class="given">Max Ernst</span>
-          <span class="family">Huisman <span class="accent">Gutiérrez</span></span>
-        </h1>
-
-        <div class="whoami-strip">
-          <div class="strip-cell"><span class="strip-key">role</span><span class="strip-val">AI/ML engineer</span></div>
-          <div class="strip-cell"><span class="strip-key">city</span><span class="strip-val">Barcelona <span class="dim">·</span> remote ES</span></div>
-          <div class="strip-cell"><span class="strip-key">status</span><span class="strip-val"><span class="status-dot"></span>available now</span></div>
-        </div>
-
-        <div class="whoami-stats">
-          <div class="ws-cell">
-            <span class="ws-num" data-count="4">0</span>
-            <span class="ws-lbl">PyPI packages</span>
-          </div>
-          <div class="ws-cell">
-            <span class="ws-num" data-count="350" data-suffix="+">0</span>
-            <span class="ws-lbl">tests shipped</span>
-          </div>
-          <div class="ws-cell">
-            <span class="ws-num" data-count="88" data-suffix="%">0</span>
-            <span class="ws-lbl">branch coverage</span>
-          </div>
-          <div class="ws-cell">
-            <span class="ws-num" data-count="25" data-suffix="K+">0</span>
-            <span class="ws-lbl">launch impressions</span>
+    <!-- ═══════════════════════════════════════════════════════════════════
+         HERO
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section section-hero" id="hero" data-anim="Wave">
+      <div class="container hero-grid">
+        <div class="hero-text">
+          <span class="kicker"><span class="kicker-dot"></span> [loplop://session/0001 — identity]</span>
+          <h1 class="display">
+            <span class="d-line">Max Ernst</span>
+            <span class="d-line"><em>Huisman <span class="accent">Gutiérrez</span></em></span>
+          </h1>
+          <p class="lead">
+            AI/ML engineer building <span class="hl">production developer tools</span> for agentic AI.
+            <br>
+            <span class="dim">Barcelona · remote ES · 3rd-year OTIC at La Salle.</span>
+          </p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#contact">say hi</a>
+            <a class="btn" href="https://github.com/loplop-h" target="_blank" rel="noopener">github</a>
           </div>
         </div>
-      </section>
+      </div>
+      <span class="scroll-hint" aria-hidden="true">scroll <span class="scroll-arrow">↓</span></span>
+    </section>
 
-      <!-- ═══════════════════════════════════════════════════════════════
-           SCENE 2 — TOOLKIT
-           ═══════════════════════════════════════════════════════════════ -->
-      <section class="scene scene-toolkit" data-scene="toolkit">
-        <div class="scene-tag"><span class="tag-dot"></span> session/0002 — toolkit</div>
-        <h2 class="scene-headline">
-          a <span class="accent-coral">coherent</span> toolkit for agentic AI
+    <!-- ═══════════════════════════════════════════════════════════════════
+         ABOUT — short pitch + stat counters
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section section-about" id="about" data-anim="Idle">
+      <div class="container about-grid">
+        <div class="about-text">
+          <span class="kicker"><span class="kicker-dot"></span> about</span>
+          <h2 class="h-section">
+            Shipping <span class="accent">production AI tooling</span> from a 3rd-year engineering bench.
+          </h2>
+          <p class="body">
+            Four hot-fix releases in 48h after rewind's launch. Four Python packages on PyPI, together a coherent toolkit for agentic AI workflows. mypy strict, multi-OS CI green, release notes treated like product changelogs.
+          </p>
+        </div>
+
+        <div class="stats-card">
+          <div class="stat">
+            <span class="stat-num" data-count="4">0</span>
+            <span class="stat-lbl">PyPI packages</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" data-count="350" data-suffix="+">0</span>
+            <span class="stat-lbl">tests shipped</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" data-count="88" data-suffix="%">0</span>
+            <span class="stat-lbl">branch coverage</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" data-count="25" data-suffix="K+">0</span>
+            <span class="stat-lbl">launch impressions</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         TOOLKIT — 4 packages
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section section-toolkit" id="toolkit" data-anim="ThumbsUp">
+      <div class="container">
+        <span class="kicker"><span class="kicker-dot"></span> toolkit</span>
+        <h2 class="h-section">
+          Four packages. <span class="dim">One thesis: agents need observability, accounting, security, and a quality gate.</span>
         </h2>
 
-        <div class="toolkit-wrap">
-          <svg class="toolkit-svg" viewBox="0 0 900 480" id="toolkitSvg">
-            <!-- connections -->
-            <path class="link" d="M 220 140 Q 450 90 680 140" />
-            <path class="link" d="M 220 140 Q 200 280 220 340" />
-            <path class="link" d="M 680 140 Q 700 280 680 340" />
-            <path class="link" d="M 220 340 Q 450 400 680 340" />
-            <path class="link link-cross" d="M 220 140 Q 450 240 680 340" />
-            <path class="link link-cross" d="M 680 140 Q 450 240 220 340" />
+        <div class="toolkit-grid">
+          <a class="tool-card" href="https://pypi.org/project/rewindx/" target="_blank" rel="noopener" data-verb="observe">
+            <span class="tool-verb">observe</span>
+            <span class="tool-name">rewind</span>
+            <span class="tool-desc">time-travel debugger for AI agent sessions</span>
+            <span class="tool-meta">v0.1.4 · 141 tests · 88% branch coverage</span>
+          </a>
+          <a class="tool-card" href="https://pypi.org/project/spent/" target="_blank" rel="noopener" data-verb="measure">
+            <span class="tool-verb">measure</span>
+            <span class="tool-name">spent</span>
+            <span class="tool-desc">cost tracker for AI agent sessions</span>
+            <span class="tool-meta">v0.5.1 · 220+ tests · 25K+ impressions</span>
+          </a>
+          <a class="tool-card" href="https://pypi.org/project/guardmcp/" target="_blank" rel="noopener" data-verb="secure">
+            <span class="tool-verb">secure</span>
+            <span class="tool-name">mcpguard</span>
+            <span class="tool-desc">OWASP MCP Top 10 security scanner</span>
+            <span class="tool-meta">AST analysis · CI-friendly</span>
+          </a>
+          <a class="tool-card" href="https://pypi.org/project/debtx/" target="_blank" rel="noopener" data-verb="audit">
+            <span class="tool-verb">audit</span>
+            <span class="tool-name">debtx</span>
+            <span class="tool-desc">A–F static-analysis grader for AI-generated code</span>
+            <span class="tool-meta">complexity · duplication · types · style</span>
+          </a>
+        </div>
+      </div>
+    </section>
 
-            <!-- nodes -->
-            <g class="node node-1" transform="translate(220,140)">
-              <circle class="node-core" r="42" />
-              <circle class="node-ring" r="54" />
-              <text class="node-verb" y="-72">observe</text>
-              <text class="node-name" y="6">rewind</text>
-              <text class="node-meta" y="22">v0.1.4 · 141 tests</text>
-            </g>
-            <g class="node node-2" transform="translate(680,140)">
-              <circle class="node-core" r="42" />
-              <circle class="node-ring" r="54" />
-              <text class="node-verb" y="-72">measure</text>
-              <text class="node-name" y="6">spent</text>
-              <text class="node-meta" y="22">v0.5.1 · 220+ tests</text>
-            </g>
-            <g class="node node-3" transform="translate(220,340)">
-              <circle class="node-core" r="42" />
-              <circle class="node-ring" r="54" />
-              <text class="node-verb" y="-72">secure</text>
-              <text class="node-name" y="6">mcpguard</text>
-              <text class="node-meta" y="22">OWASP · AST</text>
-            </g>
-            <g class="node node-4" transform="translate(680,340)">
-              <circle class="node-core" r="42" />
-              <circle class="node-ring" r="54" />
-              <text class="node-verb" y="-72">audit</text>
-              <text class="node-name" y="6">debtx</text>
-              <text class="node-meta" y="22">A–F · static</text>
-            </g>
-
-            <!-- center label -->
-            <text class="toolkit-center" x="450" y="240">agentic AI</text>
-            <text class="toolkit-center-sub" x="450" y="260">workflows</text>
-          </svg>
+    <!-- ═══════════════════════════════════════════════════════════════════
+         REWIND — featured deep dive
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section section-feature section-rewind" id="rewind" data-anim="Walking">
+      <div class="container feature-grid">
+        <div class="feature-text">
+          <span class="kicker"><span class="kicker-dot kd-coral"></span> featured · v0.1.4</span>
+          <h2 class="feature-title">rewind</h2>
+          <p class="feature-pitch">time-travel debugger for <span class="accent">AI agent sessions</span></p>
+          <ul class="checklist">
+            <li>Captures every prompt, tool call, file edit and cost into per-session SQLite (WAL) + content-addressed blob store.</li>
+            <li>Timeline scrub, rollback, undo, privacy-masked Markdown export.</li>
+            <li>Two production bugs caught only by real-session smoke tests — Windows cp1252 stdout crash and bash-on-Windows backslash escape — both shipped within 24h.</li>
+          </ul>
+          <div class="chips">
+            <span>Python</span><span>anyio</span><span>Click</span><span>Rich</span>
+            <span>SQLite (WAL)</span><span>pytest</span><span>mypy strict</span>
+          </div>
         </div>
 
-        <p class="toolkit-thesis">
-          four packages on PyPI. <span class="dim">one thesis: agents need observability, accounting, security, and a quality gate.</span>
-        </p>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════════
-           SCENE 3 — REWIND (featured)
-           ═══════════════════════════════════════════════════════════════ -->
-      <section class="scene scene-rewind" data-scene="rewind">
-        <div class="scene-tag"><span class="tag-dot tag-coral"></span> session/0003 — featured · rewind</div>
-
-        <div class="rewind-grid">
-          <div class="rewind-left">
-            <h2 class="rewind-title">
-              <span class="rt-name">rewind</span>
-              <span class="rt-version">v0.1.4</span>
-            </h2>
-            <p class="rewind-pitch">
-              time-travel debugger for <span class="accent-coral">AI agent sessions</span>
-            </p>
-
-            <ul class="rewind-bullets">
-              <li>captures every prompt, tool call, file edit and cost into per-session SQLite (WAL) + content-addressed blob store</li>
-              <li>timeline scrub, rollback, undo, privacy-masked Markdown export</li>
-              <li>two production bugs caught only by real-session smoke tests — Windows cp1252 stdout crash and bash-on-Windows backslash escape — both shipped within 24h</li>
-            </ul>
-
-            <div class="rewind-stack">
-              <span>Python</span>
-              <span>anyio</span>
-              <span>Click</span>
-              <span>Rich</span>
-              <span>SQLite (WAL)</span>
-              <span>pytest</span>
-              <span>mypy strict</span>
+        <div class="feature-visual">
+          <div class="terminal-card">
+            <div class="terminal-bar">
+              <span class="td r"></span><span class="td y"></span><span class="td g"></span>
+              <span class="terminal-title">~/rewind</span>
+            </div>
+            <div class="terminal-body">
+              <div class="tline"><span class="prompt">$</span> pip install rewindx</div>
+              <div class="tline dim">  Successfully installed rewindx-0.1.4</div>
+              <div class="tline"><span class="prompt">$</span> rewind cc setup</div>
+              <div class="tline ok">  ✓ Hooks installed in ~/.claude/settings.json</div>
+              <div class="tline dim">  # Time-travel debugging is now active.</div>
+              <div class="tline"><span class="prompt">$</span> rewind list</div>
+              <div class="tline"><span class="prompt arrow">→</span> 27 sessions · 4.2M tokens · $43.18</div>
+              <div class="tline"><span class="prompt">$</span> rewind scrub --to t-2h</div>
+              <div class="tline ok">  ✓ rewound · file state restored</div>
             </div>
           </div>
 
-          <div class="rewind-right">
-            <div class="mini-terminal">
-              <div class="mini-bar">
-                <span class="mb-dot mb-r"></span>
-                <span class="mb-dot mb-y"></span>
-                <span class="mb-dot mb-g"></span>
-                <span class="mb-title">~/rewind</span>
-              </div>
-              <div class="mini-body">
-                <div class="rt-line"><span class="rt-prompt">$</span> pip install rewindx</div>
-                <div class="rt-line dim">  Successfully installed rewindx-0.1.4</div>
-                <div class="rt-line"><span class="rt-prompt">$</span> rewind cc setup</div>
-                <div class="rt-line ok">  ✓ Hooks installed in ~/.claude/settings.json</div>
-                <div class="rt-line dim">  # Time-travel debugging is now active.</div>
-                <div class="rt-line"><span class="rt-prompt">$</span> rewind list</div>
-                <div class="rt-line"><span class="rt-prompt">→</span> 27 sessions · 4.2M tokens · $43.18</div>
-                <div class="rt-line"><span class="rt-prompt">$</span> rewind scrub --to t-2h</div>
-                <div class="rt-line ok">  ✓ rewound · file state restored</div>
-              </div>
-            </div>
-
-            <div class="rewind-stats">
-              <div><span class="rs-num">141</span><span class="rs-lbl">tests</span></div>
-              <div><span class="rs-num">88<span class="rs-pct">%</span></span><span class="rs-lbl">branch coverage</span></div>
-              <div><span class="rs-num">3</span><span class="rs-lbl">OS green</span></div>
-            </div>
+          <div class="feature-stats">
+            <div><span class="fs-num">141</span><span class="fs-lbl">tests</span></div>
+            <div><span class="fs-num">88<span class="dim">%</span></span><span class="fs-lbl">branch cov.</span></div>
+            <div><span class="fs-num">3</span><span class="fs-lbl">OS green</span></div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ═══════════════════════════════════════════════════════════════
-           SCENE 4 — STRATUM
-           ═══════════════════════════════════════════════════════════════ -->
-      <section class="scene scene-stratum" data-scene="stratum">
-        <div class="scene-tag"><span class="tag-dot"></span> session/0004 — full-stack · stratum</div>
-
+    <!-- ═══════════════════════════════════════════════════════════════════
+         STRATUM — full-stack proof
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section section-stratum" id="stratum" data-anim="Running">
+      <div class="container">
+        <span class="kicker"><span class="kicker-dot"></span> full-stack project</span>
         <h2 class="stratum-title">STRATUM</h2>
-        <p class="stratum-pitch">
+        <p class="feature-pitch">
           regulatory intelligence for pharma — <span class="dim">FDA Complete Response Letters &amp; EMA objections, processed at scale</span>
         </p>
 
         <div class="stratum-numbers">
-          <div class="sn-cell">
+          <div class="sn">
             <span class="sn-num" data-count="28961">0</span>
             <span class="sn-lbl">FDA documents</span>
           </div>
-          <div class="sn-cell">
+          <div class="sn">
             <span class="sn-num" data-count="418">0</span>
             <span class="sn-lbl">CRLs extracted</span>
           </div>
-          <div class="sn-cell">
+          <div class="sn">
             <span class="sn-num" data-count="3307">0</span>
             <span class="sn-lbl">EMA objections</span>
           </div>
-          <div class="sn-cell">
+          <div class="sn">
             <span class="sn-num" data-count="2296">0</span>
             <span class="sn-lbl">EMA documents</span>
           </div>
         </div>
 
-        <div class="stratum-stores">
-          <div class="store">
-            <span class="store-tag">RELATIONAL</span>
-            <span class="store-name">PostgreSQL</span>
-          </div>
-          <div class="store-link">→</div>
-          <div class="store">
-            <span class="store-tag">GRAPH</span>
-            <span class="store-name">Neo4j</span>
-          </div>
-          <div class="store-link">→</div>
-          <div class="store">
-            <span class="store-tag">VECTOR</span>
-            <span class="store-name">Weaviate</span>
-          </div>
-        </div>
-
         <div class="stratum-stack">
-          <span>Python</span>
-          <span>FastAPI</span>
-          <span>Next.js</span>
-          <span>NLP</span>
-          <span>knowledge graphs</span>
+          <div class="store"><span class="store-tag">RELATIONAL</span><span class="store-name">PostgreSQL</span></div>
+          <span class="store-arrow">→</span>
+          <div class="store"><span class="store-tag">GRAPH</span><span class="store-name">Neo4j</span></div>
+          <span class="store-arrow">→</span>
+          <div class="store"><span class="store-tag">VECTOR</span><span class="store-name">Weaviate</span></div>
         </div>
-      </section>
 
-      <!-- ═══════════════════════════════════════════════════════════════
-           SCENE 5 — OTHER PROJECTS
-           ═══════════════════════════════════════════════════════════════ -->
-      <section class="scene scene-others" data-scene="others">
-        <div class="scene-tag"><span class="tag-dot"></span> session/0005 — projects/</div>
-        <h2 class="scene-headline">three more on <span class="mono">PyPI</span></h2>
+        <div class="chips chips-center">
+          <span>Python</span><span>FastAPI</span><span>Next.js</span><span>NLP</span><span>knowledge graphs</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         OTHERS
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section section-others" id="others" data-anim="Yes">
+      <div class="container">
+        <span class="kicker"><span class="kicker-dot"></span> three more on PyPI</span>
+        <h2 class="h-section">More from <span class="mono">~/projects/</span></h2>
 
         <div class="others-grid">
-
           <a class="other-card" href="https://pypi.org/project/spent/" target="_blank" rel="noopener">
-            <div class="oc-head">
-              <span class="oc-name">spent</span>
-              <span class="oc-version">v0.5.1</span>
-            </div>
+            <div class="oc-head"><span class="oc-name">spent</span><span class="oc-version">v0.5.1</span></div>
             <div class="oc-pitch">cost tracker for AI agent sessions</div>
-            <div class="oc-bullets">
-              <span>real-time terminal dashboard</span>
-              <span>per-model breakdown · token-level analysis</span>
-              <span>220+ tests · 25K+ launch impressions</span>
-            </div>
-            <div class="oc-stack">Python · Rich · SQLite · JSONL · agent hooks</div>
+            <ul class="oc-bullets">
+              <li>real-time terminal dashboard</li>
+              <li>per-model breakdown · token analysis</li>
+              <li>220+ tests · 25K+ launch impressions</li>
+            </ul>
+            <div class="oc-stack">Python · Rich · SQLite · agent hooks</div>
           </a>
-
           <a class="other-card" href="https://pypi.org/project/guardmcp/" target="_blank" rel="noopener">
-            <div class="oc-head">
-              <span class="oc-name">mcpguard</span>
-              <span class="oc-version">guardmcp</span>
-            </div>
+            <div class="oc-head"><span class="oc-name">mcpguard</span><span class="oc-version">guardmcp</span></div>
             <div class="oc-pitch">OWASP MCP Top 10 security scanner</div>
-            <div class="oc-bullets">
-              <span>AST-based static analysis</span>
-              <span>checks for token leakage · privilege misuse · prompt injection</span>
-              <span>CI-friendly · JSON output</span>
-            </div>
+            <ul class="oc-bullets">
+              <li>AST-based static analysis</li>
+              <li>token leakage · privilege misuse · prompt injection</li>
+              <li>CI-friendly · JSON output</li>
+            </ul>
             <div class="oc-stack">Python · ast · OWASP MCP</div>
           </a>
-
           <a class="other-card" href="https://pypi.org/project/debtx/" target="_blank" rel="noopener">
-            <div class="oc-head">
-              <span class="oc-name">debtx</span>
-              <span class="oc-version">debtx</span>
-            </div>
+            <div class="oc-head"><span class="oc-name">debtx</span><span class="oc-version">debtx</span></div>
             <div class="oc-pitch">A–F static-analysis grader for AI-generated code</div>
-            <div class="oc-bullets">
-              <span>auditable signal for vibe-coded PRs</span>
-              <span>complexity · duplication · type coverage · style</span>
-              <span>per-file letter grades</span>
-            </div>
+            <ul class="oc-bullets">
+              <li>auditable signal for vibe-coded PRs</li>
+              <li>complexity · duplication · types · style</li>
+              <li>per-file letter grades</li>
+            </ul>
             <div class="oc-stack">Python · radon · ruff · mypy</div>
           </a>
-
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ═══════════════════════════════════════════════════════════════
-           SCENE 6 — TIMELINE
-           ═══════════════════════════════════════════════════════════════ -->
-      <section class="scene scene-timeline" data-scene="timeline">
-        <div class="scene-tag"><span class="tag-dot"></span> session/0006 — git log --career</div>
-        <h2 class="scene-headline">recent commits to <span class="mono">/career</span></h2>
+    <!-- ═══════════════════════════════════════════════════════════════════
+         TIMELINE
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section section-timeline" id="timeline" data-anim="Walking">
+      <div class="container">
+        <span class="kicker"><span class="kicker-dot"></span> git log --career</span>
+        <h2 class="h-section">Recent commits to <span class="mono">/career</span></h2>
 
         <ol class="career">
           <li class="evt evt-live">
@@ -398,57 +339,48 @@
             <span class="evt-what">🏆 1st place — <a href="https://rsme.es/ganadores-de-los-concursos-del-dia-internacional-de-las-matematicas/" target="_blank" rel="noopener">RSME national mathematics competition</a>, video category</span>
           </li>
         </ol>
-      </section>
+      </div>
+    </section>
 
-      <!-- ═══════════════════════════════════════════════════════════════
-           SCENE 7 — PROCESS
-           ═══════════════════════════════════════════════════════════════ -->
-      <section class="scene scene-process" data-scene="process">
-        <div class="scene-tag"><span class="tag-dot"></span> session/0007 — process</div>
-
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PROCESS
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section section-process" id="process" data-anim="Standing">
+      <div class="container">
+        <span class="kicker"><span class="kicker-dot"></span> process</span>
         <blockquote class="manifesto">
-          <span class="manifesto-quote">"</span>
-          building the AI tooling I <span class="accent-coral">wish existed</span> when I started.
+          <span class="m-quote">"</span>
+          building the AI tooling I <span class="accent">wish existed</span> when I started.
         </blockquote>
 
         <div class="tenets">
           <div class="tenet">
             <span class="tenet-num">01</span>
             <h3 class="tenet-h">mypy strict</h3>
-            <p class="tenet-p">types non-negotiable. unsafe casts trigger CI failure.</p>
+            <p>Types non-negotiable. Unsafe casts trigger CI failure.</p>
           </div>
           <div class="tenet">
             <span class="tenet-num">02</span>
             <h3 class="tenet-h">real-session smoke tests</h3>
-            <p class="tenet-p">CI misses the bugs that bite users. one full agent session per release.</p>
+            <p>CI misses the bugs that bite users. One full agent session per release.</p>
           </div>
           <div class="tenet">
             <span class="tenet-num">03</span>
-            <h3 class="tenet-h">release notes as product changelogs</h3>
-            <p class="tenet-p">every patch tells a story. users know exactly what changed and why.</p>
+            <h3 class="tenet-h">release notes as changelogs</h3>
+            <p>Every patch tells a story. Users know exactly what changed and why.</p>
           </div>
         </div>
+      </div>
+    </section>
 
-        <div class="learning">
-          <span class="learning-tag">currently learning</span>
-          <span class="learning-list">
-            <a href="https://dataintensive.net/" target="_blank" rel="noopener">Designing Data-Intensive Applications</a>
-            <span class="dim">·</span>
-            <a href="https://use-the-index-luke.com/" target="_blank" rel="noopener">use-the-index-luke.com</a>
-            <span class="dim">·</span>
-            <a href="https://www.coursera.org/specializations/machine-learning-introduction" target="_blank" rel="noopener">Stanford ML Specialization</a>
-          </span>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════════
-           SCENE 8 — CONTACT
-           ═══════════════════════════════════════════════════════════════ -->
-      <section class="scene scene-contact" data-scene="contact">
-        <div class="scene-tag"><span class="tag-dot tag-green"></span> session/0008 — let's connect</div>
-
+    <!-- ═══════════════════════════════════════════════════════════════════
+         CONTACT
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section section-contact" id="contact" data-anim="Jump">
+      <div class="container">
+        <span class="kicker"><span class="kicker-dot kd-green"></span> let's connect</span>
         <h2 class="contact-cta">
-          let's <span class="accent-coral">build</span> something
+          let's <span class="accent">build</span> something
         </h2>
 
         <div class="contact-grid">
@@ -474,45 +406,32 @@
           <span class="status-dot"></span>
           <span>available now <span class="dim">·</span> Barcelona <span class="dim">·</span> remote Spain</span>
         </div>
-
-        <div class="contact-loplop">
-          <em>"Loplop" — Max Ernst's bird-form alter ego.<br>The surrealist painter who is the namesake's namesake.</em>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Floating scroll cue (fades out after first scroll) -->
-    <div class="scroll-cue" id="scrollCue" aria-hidden="true">
-      <span class="cue-text">scroll to scrub</span>
-      <span class="cue-arrow">↓</span>
-    </div>
-
-    <!-- Bottom chrome -->
-    <footer class="frame-bottom">
-      <div class="fb-l">
-        <span class="fb-key">$</span>
-        <span class="fb-val">session.tail</span>
       </div>
-      <div class="fb-c">
-        <span class="fb-bar" id="scrollBar"></span>
-        <span class="fb-pct" id="scrollPct">0%</span>
-      </div>
-      <div class="fb-r">
-        <span class="fb-key">scene</span>
-        <span class="fb-val" id="sceneIdx">01</span>
-        <span class="fb-key">/</span>
-        <span class="fb-val">08</span>
-      </div>
-    </footer>
+    </section>
 
-  </div>
+  </main>
 
-  <!-- Libraries -->
+  <footer class="site-footer">
+    <span class="dim">© 2026 Max Ernst Huisman Gutiérrez</span>
+    <span class="dim">·</span>
+    <a href="https://github.com/loplop-h/maxhuisman-space" target="_blank" rel="noopener">source on github</a>
+    <span class="dim">·</span>
+    <span class="dim"><em>"Loplop" — Max Ernst's bird-form alter ego.</em></span>
+  </footer>
+
+  <!-- Libraries: GSAP first (classic), then three.js as ES module -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
-  <script src="script.js"></script>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="script.js"></script>
 
 </body>
 </html>
