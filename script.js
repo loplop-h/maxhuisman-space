@@ -81,8 +81,13 @@ function init3D() {
     slateAccent.position.set(3, -2, 2);
     scene.add(slateAccent);
 
-    // Robot wrapper — gives us a stable pivot for positioning
+    // Nested groups: pivot is driven by scroll (GSAP), bobGroup is driven
+    // by the render loop (time-based). Splitting them avoids the two
+    // systems fighting for control of position.y, which was the cause of
+    // the "teleport" jitter when scrolling fast.
     const robotPivot = new THREE.Group();
+    const bobGroup = new THREE.Group();
+    robotPivot.add(bobGroup);
     scene.add(robotPivot);
 
     // Load robot
@@ -105,7 +110,7 @@ function init3D() {
                     }
                 }
             });
-            robotPivot.add(robot);
+            bobGroup.add(robot);
 
             mixer = new THREE.AnimationMixer(robot);
             gltf.animations.forEach((clip) => {
@@ -140,10 +145,16 @@ function init3D() {
     setTimeout(() => BOOT?.classList.add('gone'), 4000);
 
     // ── Render loop ────────────────────────────────────────────────────
+    // bobGroup gets a small time-based vertical wobble so the robot feels
+    // alive even when the user isn't scrolling. Doing this in the render
+    // loop (not via GSAP) avoids fighting the scroll-driven pivot tween.
     const clock = new THREE.Clock();
+    let elapsed = 0;
     function tick() {
         const delta = clock.getDelta();
+        elapsed += delta;
         if (mixer) mixer.update(delta);
+        bobGroup.position.y = Math.sin(elapsed * 1.2) * 0.04;
         renderer.render(scene, camera);
     }
     renderer.setAnimationLoop(tick);
@@ -172,63 +183,61 @@ function init3D() {
     }
 
     // ── Scroll-driven robot motion ─────────────────────────────────────
+    // ONE master timeline owns the pivot's transform. Each section is a
+    // sequential keyframe. Scrubbed by total page scroll. No competing
+    // triggers, no race between separate scrubs.
     function wireScrollMotion(pivot) {
         const sections = Array.from(document.querySelectorAll('.section[data-anim]'));
+        if (!sections.length) return;
 
-        sections.forEach((section) => {
-            const id = section.id;
-            const anchor = ANCHORS[id];
-            if (!anchor) return;
+        // Set initial transform to the first section's anchor (no animation).
+        const first = ANCHORS[sections[0].id];
+        if (first) {
+            pivot.position.set(first.x, first.y, first.z);
+            pivot.rotation.y = first.ry;
+            pivot.scale.setScalar(first.scale);
+        }
 
-            // Position transition into this anchor
-            gsap.to(pivot.position, {
-                x: anchor.x, y: anchor.y, z: anchor.z,
-                ease: 'power2.inOut',
-                scrollTrigger: {
-                    trigger: section,
-                    start: 'top 70%',
-                    end: 'top 30%',
-                    scrub: 1.2,
-                },
-            });
-            gsap.to(pivot.rotation, {
-                y: anchor.ry,
-                ease: 'power2.inOut',
-                scrollTrigger: {
-                    trigger: section,
-                    start: 'top 70%',
-                    end: 'top 30%',
-                    scrub: 1.2,
-                },
-            });
-            gsap.to(pivot.scale, {
-                x: anchor.scale, y: anchor.scale, z: anchor.scale,
-                ease: 'power2.inOut',
-                scrollTrigger: {
-                    trigger: section,
-                    start: 'top 70%',
-                    end: 'top 30%',
-                    scrub: 1.2,
-                },
-            });
-
-            // Animation switch on enter
-            ScrollTrigger.create({
-                trigger: section,
-                start: 'top 60%',
-                end: 'bottom 40%',
-                onEnter: () => playAnim(anchor.anim),
-                onEnterBack: () => playAnim(anchor.anim),
-            });
+        const tl = gsap.timeline({
+            defaults: { ease: 'power2.inOut' },
+            scrollTrigger: {
+                trigger: document.querySelector('main'),
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 0.8,
+                invalidateOnRefresh: true,
+            },
         });
 
-        // Subtle idle bob — adds life independent of scroll
-        gsap.to(pivot.position, {
-            y: '+=0.06',
-            duration: 2.4,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
+        // Build sequential keyframes — one per section, all sharing duration 1.
+        sections.forEach((section, i) => {
+            const anchor = ANCHORS[section.id];
+            if (!anchor) return;
+            // For the first section, just snap to its anchor at t=0
+            // (no incoming transition needed).
+            if (i === 0) {
+                tl.set(pivot.position, { x: anchor.x, y: anchor.y, z: anchor.z }, 0)
+                  .set(pivot.rotation, { y: anchor.ry }, 0)
+                  .set(pivot.scale, { x: anchor.scale, y: anchor.scale, z: anchor.scale }, 0);
+                return;
+            }
+            tl.to(pivot.position, { x: anchor.x, y: anchor.y, z: anchor.z, duration: 1 }, i)
+              .to(pivot.rotation, { y: anchor.ry, duration: 1 }, i)
+              .to(pivot.scale,    { x: anchor.scale, y: anchor.scale, z: anchor.scale, duration: 1 }, i);
+        });
+
+        // Animation clip switcher — separate, NOT scrubbed. Fires on enter
+        // and stays. Cross-fades via AnimationMixer in playAnim().
+        sections.forEach((section) => {
+            const anchor = ANCHORS[section.id];
+            if (!anchor) return;
+            ScrollTrigger.create({
+                trigger: section,
+                start: 'top center',
+                end: 'bottom center',
+                onEnter:    () => playAnim(anchor.anim),
+                onEnterBack:() => playAnim(anchor.anim),
+            });
         });
     }
 
